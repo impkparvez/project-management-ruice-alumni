@@ -4,7 +4,7 @@
 
 **Project Name:** AIMS - Alumni Information Management System
 
-**Goal:** Build a full-featured monolithic web application to manage alumni engagement, events, job opportunities, and more.
+**Goal:** Build a full-featured monolithic web application to manage alumni engagement, events, job opportunities, and more, with production-grade scalability, security, and reliability.
 
 ---
 
@@ -14,7 +14,7 @@
 
 - Identify Stakeholders: Faculty, Alumni, Students, Staffs, IT Staff
 - Conduct Interviews, Surveys, and Questionnaires
-- Perform Competitior Analysis (e.g., alumni portals at top universities)
+- Perform Competitor Analysis (e.g., alumni portals at top universities)
 
 ### ✅ Deliverables
 
@@ -22,7 +22,7 @@
 - Software Requirements Specification (SRS)
 - Use Case Diagrams, Data Flow Diagrams (DFD)
 - User Stories (Agile Format)
-- Early API Plan
+- API Plan with versioning strategy
 - Assumptions & Constraints
 - Acceptance Criteria
 
@@ -35,7 +35,7 @@
   - Measurable: 1000+ user registrations within 6 months
   - Achievable: Use open-source tools and agile team
   - Relevant: Supports career growth and community
-  - Time-bound: MVP in 3 months
+  - Time-bound: MVP in 3 months, production-ready system in 6 months
 
 ## 🌀 Step 2: Choose Development Model
 
@@ -54,13 +54,15 @@
 - Job board
 - Messaging system
 - Admin dashboard with analytics
+- Role-based access control (RBAC)
 
 ### ✅ Non-Functional Requirements
 
-- Security (JWT, RBAC)
-- Performance optimization
-- Audit logs
-- Scalability within monolithic scope
+- Security (JWT, RBAC, OWASP compliance)
+- Performance optimization (caching, CDN)
+- Audit logs with immutable storage
+- Scalability (horizontal scaling for backend and database)
+- High availability (HA) with failover mechanisms
 
 ## 📋 Step 4: Create Software Requirement Specification (SRS)
 
@@ -69,7 +71,8 @@ Detailed documentation that covers:
 - Project overview
 - Use case diagrams, Data Flow Diagrams (DFD)
 - Business rules
-- Early API plan
+- API plan with versioning and rate-limiting
+- Security and compliance requirements
 
 ---
 
@@ -81,7 +84,8 @@ Detailed documentation that covers:
 
 - Create ER Diagrams or Logical Data Models
 - Normalize where necessary
-- Identify collection, indexes, relationships
+- Identify collections, indexes, relationships
+- Implement sharding for scalability in production
 
 **Tools:** dbdiagram.io, Draw.io, Lucidchart
 
@@ -114,7 +118,8 @@ Detailed documentation that covers:
   profilePicture: String,
   connections: [ObjectId],
   createdAt: Date,
-  updatedAt: Date
+  updatedAt: Date,
+  isActive: Boolean // For soft deletes
 }
 ```
 
@@ -130,7 +135,8 @@ Detailed documentation that covers:
   createdBy: ObjectId,
   attendees: [ObjectId],
   createdAt: Date,
-  updatedAt: Date
+  updatedAt: Date,
+  isArchived: Boolean // For archiving old events
 }
 ```
 
@@ -152,11 +158,13 @@ Detailed documentation that covers:
 - Index on `email` (unique)
 - Compound index for sorting: `graduationYear + department`
 - Text index on bios and job descriptions
+- TTL index for temporary data (e.g., password reset tokens)
 
 ### ✅ 6. Data Validation
 
 - In DB: Mongoose validation
 - In API Layer: Zod / Joi
+- In Production: Add schema validation at API Gateway
 
 ---
 
@@ -164,7 +172,7 @@ Detailed documentation that covers:
 
 ### 🔷 High-Level Design (HLD)
 
-- **Architecture:** Monolithic
+- **Architecture:** Monolithic with modular design
 - **Modules:**
   - Authentication & Authorization
   - User & Role Management
@@ -173,6 +181,10 @@ Detailed documentation that covers:
   - Messaging & Notifications
   - Donations
   - Admin Dashboard
+- **Production Enhancements:**
+  - Use Docker for containerization
+  - Implement reverse proxy (e.g., Nginx)
+  - Use Redis for caching
 
 ### 🧩 Low-Level Design (LLD)
 
@@ -180,6 +192,7 @@ Detailed documentation that covers:
 - **Frontend Components:** Broken down by module
 - **Middlewares:** auth, validation, error handling, rate-limiting, logging
 - **DB Schema (MongoDB collections):** users, events, jobs, messages, logs, connections
+- **Monitoring:** Integrate tools like Prometheus and Grafana
 
 ### 🗂 Folder Structure
 
@@ -191,6 +204,8 @@ alumni-management/
 │   ├── routes/
 │   ├── middlewares/
 │   ├── services/
+│   ├── utils/            # Helper functions
+│   ├── config/           # Environment-specific configurations
 │   └── app.js
 │
 ├── frontend/             # Next.js + TailwindCSS + Redux
@@ -198,10 +213,13 @@ alumni-management/
 │   │   ├── components/
 │   │   ├── pages/
 │   │   ├── redux/
+│   │   ├── utils/        # Frontend utilities
 │   │   └── App.tsx
 │   └── tailwind.config.js
 │
-├── .env
+├── .env                  # Environment variables
+├── Dockerfile            # Docker configuration
+├── docker-compose.yml    # Multi-container setup
 └── README.md
 ```
 
@@ -221,7 +239,8 @@ alumni-management/
 | Authentication   | JWT + bcrypt + cookie-based auth      |
 | Documentation    | Postman/Swagger(API), Notion(general) |
 | Testing          | Jest, Supertest, Cypress              |
-| CI/CD            | GitHub Actions, Vercel, Docker        |
-| Deployment       | Railway / Render / Vercel / Netlify   |
+| CI/CD            | GitHub Actions, Docker, Kubernetes    |
+| Deployment       | AWS (EC2, S3, RDS), Vercel, Docker    |
+| Monitoring       | Prometheus, Grafana, ELK Stack        |
 
 ---
