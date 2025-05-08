@@ -75,7 +75,7 @@ Detailed documentation that covers:
 
 ## 🎨 PHASE 2: System Design
 
-## 🗃️ Database Design
+## 🗃️ Step 1: Database Design
 
 ✅ Use MongoDB (NoSQL)
 
@@ -160,7 +160,7 @@ Detailed documentation that covers:
 
 ---
 
-## System Architecture
+## 🌀 Step 2: System Architecture
 
 ### 🔷 High-Level Design (HLD)
 
